@@ -11,6 +11,7 @@ import com.sun.xml.internal.ws.api.message.Message;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 /**
@@ -122,13 +123,18 @@ public class VLogin extends javax.swing.JFrame {
             // TODO add your handling code here:
             String email = jtfEmail.getText();
             String password = Hash.sha1(String.valueOf(jpfPassword.getPassword()));
-            User user = User.find(email, password);
-            if(user == null)
+            User user = User.findByEmail(email);
+            if(user == null || !password.equals(user.getPassword()))
                 JOptionPane.showMessageDialog(null, "Usuario o contraseña incorrectos");
-            else
+            else{
                 JOptionPane.showMessageDialog(null, "Bienveindo " + user.getFirstName());
+                Board b = new Board();
+                b.setVisible(true);
+                b.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                this.setVisible(false);
+            }
         } catch (SQLException ex) {
-            Logger.getLogger(VLogin.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println(ex.getMessage());
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 

@@ -7,6 +7,7 @@ package login;
 
 import Helper.Hash;
 import Model.User;
+import VIew.Board;
 import VIew.VLogin;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -23,6 +24,7 @@ public class Login {
      */
     public static void main(String[] args) {
         VLogin.main(args);
+        //Board.main(args);
     }
     
 }

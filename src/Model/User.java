@@ -10,6 +10,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 /**
  *
@@ -67,13 +68,12 @@ public class User {
         this.password = password;
     }
     
-    public static User find(String email, String password) throws SQLException {
+    public static User findByEmail(String email) throws SQLException {
         Connection conn = ConnectionManager.getConnection();
-        String query = "SELECT * FROM " + User.TABLE + " WHERE email=? AND password=?";
+        String query = "SELECT * FROM " + User.TABLE + " WHERE email=?";
         PreparedStatement preparedStm = conn.prepareStatement(query);
         preparedStm.setString(1, email);
-        preparedStm.setString(2, password);
-        
+
         ResultSet rs = preparedStm.executeQuery();
         User user = null;
         if(rs.next()) {
@@ -86,5 +86,41 @@ public class User {
         }
         conn.close();
         return user;
+    }
+    
+    
+    public boolean create() throws SQLException {
+        Connection conn = ConnectionManager.getConnection();
+        String query = "INSERT INTO " + User.TABLE + "(first_name, last_name, email, password) VALUES(?, ?, ?, ?)";
+        PreparedStatement preparedStm = conn.prepareStatement(query);
+        preparedStm.setString(1, this.getFirstName());
+        preparedStm.setString(2, this.getLastName());
+        preparedStm.setString(3, this.getEmail());
+        preparedStm.setString(4, this.getPassword());
+
+        int result = preparedStm.executeUpdate();
+        conn.close();
+ 
+        return result > 0;
+    }
+    
+    public static ArrayList<User> getAll() throws SQLException {
+        Connection conn = ConnectionManager.getConnection();
+        String query = "SELECT * FROM " + User.TABLE;
+        PreparedStatement preparedStm = conn.prepareStatement(query);
+        ResultSet rs = preparedStm.executeQuery();
+        ArrayList<User> users = new ArrayList<User>();
+
+        while(rs.next()) {
+            User user = new User();
+            user.setId(rs.getInt("id"));
+            user.setFirstName(rs.getString("first_name"));
+            user.setLastName(rs.getString("last_name"));
+            user.setEmail(rs.getString("email"));
+            user.setPassword(rs.getString("password"));
+            users.add(user);
+        }
+        conn.close();
+        return users;
     }
 }
