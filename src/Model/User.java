@@ -10,6 +10,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 /**
  *
@@ -85,5 +86,40 @@ public class User {
         }
         conn.close();
         return user;
+    }
+    
+    public static ArrayList<User> getAll() throws SQLException {
+        Connection conn = ConnectionManager.getConnection();
+        String query = "SELECT * FROM " + User.TABLE;
+        PreparedStatement ps = conn.prepareStatement(query);
+        ResultSet rs = ps.executeQuery();
+        ArrayList<User> users = new ArrayList<User>();
+        while(rs.next()) {
+            User user = new  User();
+            user.setId(rs.getInt("id"));
+            user.setFirstName(rs.getString("first_name"));
+            user.setLastName(rs.getString("last_name"));
+            user.setEmail(rs.getString("email"));
+            user.setPassword(rs.getString("password"));
+            
+            users.add(user);
+        }
+        conn.close();
+        return users;
+    }
+    
+    public boolean create() throws SQLException {
+        Connection conn = ConnectionManager.getConnection();
+        String query = "INSERT INTO " + User.TABLE + 
+                "(first_name, last_name, email, password) VALUES(?, ?, ?, ?)";
+        PreparedStatement ps = conn.prepareStatement(query);
+        ps.setString(1, this.getFirstName());
+        ps.setString(2, this.getLastName());
+        ps.setString(3, this.getEmail());
+        ps.setString(4, this.getPassword());
+        
+        int result = ps.executeUpdate();
+        conn.close();
+        return result > 0;
     }
 }

@@ -11,6 +11,7 @@ import com.sun.xml.internal.ws.api.message.Message;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 /**
@@ -127,6 +128,10 @@ public class VLogin extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, "Usuario o contraseña incorrectos", "Error", JOptionPane.ERROR_MESSAGE);
             else{
                 JOptionPane.showMessageDialog(null, "Bienveindo " + user.getFirstName());
+                Board b = new Board();
+                b.setVisible(true);
+                b.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                this.setVisible(false);
             }
         } catch (SQLException ex) {
             Logger.getLogger(VLogin.class.getName()).log(Level.SEVERE, null, ex);

@@ -9,6 +9,7 @@ import Helper.Hash;
 import Model.User;
 import VIew.VLogin;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -23,6 +24,7 @@ public class Login {
      */
     public static void main(String[] args) {
         VLogin.main(args);
+            
     }
     
 }
