@@ -67,12 +67,11 @@ public class User {
         this.password = password;
     }
     
-    public static User find(String email, String password) throws SQLException {
+    public static User findByEmail(String email) throws SQLException {
         Connection conn = ConnectionManager.getConnection();
-        String query = "SELECT * FROM " + User.TABLE + " WHERE email=? AND password=?";
+        String query = "SELECT * FROM " + User.TABLE + " WHERE email=?";
         PreparedStatement preparedStm = conn.prepareStatement(query);
         preparedStm.setString(1, email);
-        preparedStm.setString(2, password);
         
         ResultSet rs = preparedStm.executeQuery();
         User user = null;

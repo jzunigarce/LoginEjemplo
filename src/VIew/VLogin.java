@@ -122,11 +122,12 @@ public class VLogin extends javax.swing.JFrame {
             // TODO add your handling code here:
             String email = jtfEmail.getText();
             String password = Hash.sha1(String.valueOf(jpfPassword.getPassword()));
-            User user = User.find(email, password);
-            if(user == null)
-                JOptionPane.showMessageDialog(null, "Usuario o contraseña incorrectos");
-            else
+            User user = User.findByEmail(email);
+            if(user == null || !password.equals(user.getPassword()))
+                JOptionPane.showMessageDialog(null, "Usuario o contraseña incorrectos", "Error", JOptionPane.ERROR_MESSAGE);
+            else{
                 JOptionPane.showMessageDialog(null, "Bienveindo " + user.getFirstName());
+            }
         } catch (SQLException ex) {
             Logger.getLogger(VLogin.class.getName()).log(Level.SEVERE, null, ex);
         }
