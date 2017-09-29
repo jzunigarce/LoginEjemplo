@@ -8,9 +8,13 @@ package VIew;
 import Helper.Hash;
 import Model.User;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JButton;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
 
 /**
  *
@@ -18,11 +22,32 @@ import javax.swing.JOptionPane;
  */
 public class Board extends javax.swing.JFrame {
 
+    private final String[] columns = {"ID", "Nombre", "Apellido", "Email", "Eliminar"}; 
     /**
      * Creates new form Board
      */
     public Board() {
         initComponents();
+        try {
+            this.htbUsers.setModel(this.loadUsers(User.getAll()));
+        } catch (SQLException ex) {
+            Logger.getLogger(Board.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    protected DefaultTableModel loadUsers(ArrayList<User> users) {
+        DefaultTableModel tableModel = new DefaultTableModel(this.columns, 0);
+        for(User user : users) {
+            Object[] o =  {
+                user.getId(), 
+                user.getFirstName(), 
+                user.getLastName(), 
+                user.getEmail()
+            };
+            tableModel.addRow(o);
+        }
+        
+        return tableModel;
     }
 
     /**
@@ -44,6 +69,8 @@ public class Board extends javax.swing.JFrame {
         jtfEmail = new javax.swing.JTextField();
         jpfPassword = new javax.swing.JPasswordField();
         jbtSave = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        htbUsers = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -111,23 +138,38 @@ public class Board extends javax.swing.JFrame {
                     .addComponent(jtfLastName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jtfEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jpfPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(348, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
+
+        htbUsers.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+
+            }
+        ));
+        jScrollPane1.setViewportView(htbUsers);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addGap(15, 15, 15)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 672, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addGap(28, 28, 28)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         pack();
@@ -143,6 +185,7 @@ public class Board extends javax.swing.JFrame {
             user.setPassword(Hash.sha1(String.valueOf(jpfPassword.getPassword())));
             if(user.create()){
                 JOptionPane.showMessageDialog(null, "Usuario creado correctamente");
+                this.htbUsers.setModel(this.loadUsers(User.getAll()));
             } else {
                 JOptionPane.showMessageDialog(null, "Ocurrió´un error al intentar guardar los datos del usuario", 
                         "Error", JOptionPane.ERROR_MESSAGE);
@@ -189,11 +232,13 @@ public class Board extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTable htbUsers;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton jbtSave;
     private javax.swing.JPasswordField jpfPassword;
     private javax.swing.JTextField jtfEmail;

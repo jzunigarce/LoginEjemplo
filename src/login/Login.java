@@ -7,6 +7,7 @@ package login;
 
 import Helper.Hash;
 import Model.User;
+import VIew.Board;
 import VIew.VLogin;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -23,7 +24,8 @@ public class Login {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        VLogin.main(args);
+        //VLogin.main(args);
+        Board.main(args);
             
     }
     
